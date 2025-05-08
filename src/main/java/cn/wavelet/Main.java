@@ -13,6 +13,7 @@ import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
 import static guru.nidi.graphviz.model.Factory.*;
 
+// 我是一句注释
 public class Main {
     private static Graph graph;
 
