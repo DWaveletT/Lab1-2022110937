@@ -1,6 +1,7 @@
 package cn.wavelet;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Graph {
     private Map<String, Map<String, Integer>> adjacencyList;
@@ -98,19 +99,40 @@ public class Graph {
         double initial = 1.0 / N;
         adjacencyList.keySet().forEach(node -> prWrapper[0].put(node, initial));
 
+        // 预处理：找出所有无出度的节点（dangling nodes）
+        Set<String> danglingNodes = adjacencyList.entrySet().stream()
+                .filter(entry -> entry.getValue().isEmpty())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
+
         for (int i = 0; i < iterations; i++) {
             Map<String, Double> newPr = new HashMap<>();
-            final Map<String, Double> currentPr = prWrapper[0]; // 创建 final 引用
+            
+            // 计算dangling nodes的总PR值
+            final double danglingSum = danglingNodes.stream()
+                    .mapToDouble(node -> prWrapper[0].get(node))
+                    .sum();
+
+            // 计算每个节点的新PR值
             adjacencyList.keySet().forEach(node -> {
+                // 来自正常链接的部分
                 double sum = inEdges.getOrDefault(node, Collections.emptyList()).stream()
-                        .mapToDouble(inNode -> currentPr.get(inNode) / adjacencyList.get(inNode).size())
+                        .mapToDouble(inNode -> {
+                            int outDegree = adjacencyList.get(inNode).size();
+                            return outDegree > 0 ? prWrapper[0].get(inNode) / outDegree : 0;
+                        })
                         .sum();
+
+                // 加上来自dangling nodes的部分（均分给所有节点）
+                sum += danglingSum / N;
+
+                // 加入随机跳转因子
                 newPr.put(node, (1 - 0.85) / N + 0.85 * sum);
             });
             prWrapper[0] = newPr;
         }
-    return prWrapper[0];
-}
+        return prWrapper[0];
+    }
 
     public String randomWalk() {
         List<String> nodes = new ArrayList<>(adjacencyList.keySet());
