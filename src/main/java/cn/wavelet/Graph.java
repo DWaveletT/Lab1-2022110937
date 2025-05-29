@@ -4,8 +4,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Graph {
-    private Map<String, Map<String, Integer>> adjacencyList;
-    private Map<String, List<String>> inEdges;
+    protected Map<String, Map<String, Integer>> adjacencyList;
+    protected Map<String, List<String>> inEdges;
 
     public Graph() {
         adjacencyList = new HashMap<>();

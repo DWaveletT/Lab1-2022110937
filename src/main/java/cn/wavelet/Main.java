@@ -14,7 +14,12 @@ import guru.nidi.graphviz.model.MutableNode;
 import static guru.nidi.graphviz.model.Factory.*;
 
 public class Main {
-    private static Graph graph;
+    protected static Graph graph;
+    
+    // 添加一个静态方法用于测试时设置 graph
+    protected static void setGraph(Graph testGraph) {
+        graph = testGraph;
+    }
 
     public static void main(String[] args) {
         if (args.length == 0) {
