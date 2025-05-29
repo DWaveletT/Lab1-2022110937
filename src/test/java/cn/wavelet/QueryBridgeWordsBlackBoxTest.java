@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class QueryBridgeWordsBlackBoxTest {
     private Graph graph;
-    private Main main;
 
     @BeforeEach
     public void setUp() {
@@ -24,7 +23,6 @@ public class QueryBridgeWordsBlackBoxTest {
         graph.addEdge("apple", "dog");
         graph.addEdge("banana", "cat");
         
-        main = new Main();
         Main.graph = graph; // 设置Main的静态graph变量
     }
 
@@ -33,7 +31,7 @@ public class QueryBridgeWordsBlackBoxTest {
         // cat -> apple -> banana
         // cat -> dog -> banana
         // 所以从cat到banana的桥接词是apple和dog
-        String result = main.queryBridgeWords("cat", "banana");
+        String result = Main.queryBridgeWords("cat", "banana");
         assertTrue(result.contains("apple") && result.contains("dog"),
                 "Should find both bridge words");
     }
@@ -41,32 +39,32 @@ public class QueryBridgeWordsBlackBoxTest {
     @Test
     public void testBothWordsExistNoBridgeWords() {
         // 没有从 cat 到 apple 的桥接词
-        String result = main.queryBridgeWords("cat", "apple");
+        String result = Main.queryBridgeWords("cat", "apple");
         assertEquals("No bridge words from \"cat\" to \"apple\"!", result);
     }
 
     @Test
     public void testWord1NotInGraph() {
-        String result = main.queryBridgeWords("elephant", "cat");
+        String result = Main.queryBridgeWords("elephant", "cat");
         assertEquals("No \"elephant\" in the graph!", result);
     }
 
     @Test
     public void testWord2NotInGraph() {
-        String result = main.queryBridgeWords("cat", "elephant");
+        String result = Main.queryBridgeWords("cat", "elephant");
         assertEquals("No \"elephant\" in the graph!", result);
     }
 
     @Test
     public void testBothWordsNotInGraph() {
-        String result = main.queryBridgeWords("elephant", "zebra");
+        String result = Main.queryBridgeWords("elephant", "zebra");
         assertEquals("No \"elephant\" and \"zebra\" in the graph!", result);
     }
 
     @Test
     public void testSingleBridgeWord() {
         // apple -> dog -> banana
-        String result = main.queryBridgeWords("apple", "banana");
+        String result = Main.queryBridgeWords("apple", "banana");
         assertEquals("The bridge word from \"apple\" to \"banana\" is: \"dog\"", result);
     }
 
@@ -74,14 +72,14 @@ public class QueryBridgeWordsBlackBoxTest {
     public void testEmptyGraph() {
         Graph emptyGraph = new Graph();
         Main.graph = emptyGraph;
-        String result = main.queryBridgeWords("cat", "dog");
+        String result = Main.queryBridgeWords("cat", "dog");
         assertEquals("No \"cat\" and \"dog\" in the graph!", result);
     }
 
     @Test
     public void testSameWord() {
         // 自环情况
-        String result = main.queryBridgeWords("cat", "cat");
+        String result = Main.queryBridgeWords("cat", "cat");
         assertEquals("No bridge words from \"cat\" to \"cat\"!", result);
     }
 }

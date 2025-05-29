@@ -1,20 +1,33 @@
 package cn.wavelet;
 
+import static guru.nidi.graphviz.model.Factory.mutGraph;
+import static guru.nidi.graphviz.model.Factory.mutNode;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.model.Factory;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
-import static guru.nidi.graphviz.model.Factory.*;
 
 public class Main {
-    protected static Graph graph;
+    static Graph graph;
+
+    private static final Random TEXT_RANDOM = new Random();
     
     // 添加一个静态方法用于测试时设置 graph
     protected static void setGraph(Graph testGraph) {
@@ -42,7 +55,7 @@ public class Main {
             }
             graph = Graph.buildGraph(words);
 
-            Scanner scanner = new Scanner(System.in);
+            Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8.name());
             while (true) {
                 System.out.println("\nMenu Options:");
                 System.out.println("1. Show Directed Graph");
@@ -92,7 +105,7 @@ public class Main {
                             String walk = randomWalk();
                             System.out.println("Random walk path: " + walk);
                             try {
-                                Files.write(Paths.get("random_walk.txt"), walk.getBytes());
+                                Files.write(Paths.get("random_walk.txt"), walk.getBytes(StandardCharsets.UTF_8));
                                 System.out.println("Random walk saved to random_walk.txt");
                             } catch (IOException e) {
                                 System.err.println("Failed to save random walk: " + e.getMessage());
@@ -141,7 +154,7 @@ public class Main {
                 // 添加所有边
                 g.getNodes().forEach(from -> {
                     g.getEdges(from).forEach((to, weight) -> {
-                        nodes.get(from).addLink(to(nodes.get(to)).with("label", String.valueOf(weight)));
+                        nodes.get(from).addLink(Factory.to(nodes.get(to)).with("label", String.valueOf(weight)));
                     });
                 });
                 
@@ -197,9 +210,9 @@ public class Main {
             return "The bridge word from \"" + word1 + "\" to \"" + word2 + "\" is: \"" + bridges.get(0) + "\"";
         }
         
-        return "The bridge words from \"" + word1 + "\" to \"" + word2 + "\" are: \"" +
-                String.join(", \"", bridges.subList(0, bridges.size() - 1)) +
-                "\" and \"" + bridges.get(bridges.size() - 1) + "\"";
+        return "The bridge words from \"" + word1 + "\" to \"" + word2 + "\" are: \""
+                + String.join(", \"", bridges.subList(0, bridges.size() - 1))
+                + "\" and \"" + bridges.get(bridges.size() - 1) + "\"";
     }
 
     public static String generateNewText(String inputText) {
@@ -214,7 +227,7 @@ public class Main {
             if (i < words.size() - 1) {
                 List<String> bridges = graph.findBridgeWords(words.get(i), words.get(i + 1));
                 if (bridges != null && !bridges.isEmpty()) {
-                    result.add(bridges.get(new Random().nextInt(bridges.size())));
+                    result.add(bridges.get(TEXT_RANDOM.nextInt(bridges.size())));
                 }
             }
         }

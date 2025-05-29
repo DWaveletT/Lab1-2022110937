@@ -1,11 +1,23 @@
 package cn.wavelet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.PriorityQueue;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Graph {
     protected Map<String, Map<String, Integer>> adjacencyList;
     protected Map<String, List<String>> inEdges;
+
+    private static final Random RANDOM = new Random();
 
     public Graph() {
         adjacencyList = new HashMap<>();
@@ -138,8 +150,7 @@ public class Graph {
         List<String> nodes = new ArrayList<>(adjacencyList.keySet());
         if (nodes.isEmpty()) return "";
 
-        Random rand = new Random();
-        String current = nodes.get(rand.nextInt(nodes.size()));
+        String current = nodes.get(RANDOM.nextInt(nodes.size()));
         List<String> path = new ArrayList<>();
         Set<String> visitedEdges = new HashSet<>();
         path.add(current);
@@ -149,7 +160,7 @@ public class Graph {
             if (edges == null || edges.isEmpty()) break;
 
             List<String> candidates = new ArrayList<>(edges.keySet());
-            String next = candidates.get(rand.nextInt(candidates.size()));
+            String next = candidates.get(RANDOM.nextInt(candidates.size()));
             String edge = current + "->" + next;
 
             if (visitedEdges.contains(edge)) break;
@@ -163,6 +174,7 @@ public class Graph {
 
     private static class NodeDistance implements Comparable<NodeDistance> {
         String node;
+
         int distance;
 
         NodeDistance(String node, int distance) {
@@ -173,6 +185,19 @@ public class Graph {
         @Override
         public int compareTo(NodeDistance other) {
             return Integer.compare(this.distance, other.distance);
+        }
+        
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            NodeDistance that = (NodeDistance) o;
+            return distance == that.distance && node.equals(that.node);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(node, distance);
         }
     }
 }
