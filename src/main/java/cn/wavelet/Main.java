@@ -14,7 +14,7 @@ import guru.nidi.graphviz.model.MutableNode;
 import static guru.nidi.graphviz.model.Factory.*;
 
 public class Main {
-  private static Graph graph;
+  protected static Graph graph;
   
   static Random RANDOM = new Random();
 
