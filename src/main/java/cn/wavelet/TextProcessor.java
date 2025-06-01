@@ -8,15 +8,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TextProcessor {
-    public static List<String> processText(String filePath) throws IOException {
-        String content = Files.readString(Paths.get(filePath));
-        content = content.replaceAll("[^a-zA-Z\\s]", " ")
-                .toLowerCase()
-                .replaceAll("\\s+", " ")
-                .trim();
-        if (content.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return Arrays.asList(content.split(" "));
+  public static List<String> processText(String filePath) throws IOException {
+    String content = Files.readString(Paths.get(filePath));
+    content = content.replaceAll("[^a-zA-Z\\s]", " ")
+        .toLowerCase()
+        .replaceAll("\\s+", " ")
+        .trim();
+    if (content.isEmpty()) {
+      return new ArrayList<>();
     }
+    return Arrays.asList(content.split(" "));
+  }
 }
