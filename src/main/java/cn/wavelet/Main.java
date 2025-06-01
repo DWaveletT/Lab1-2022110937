@@ -15,6 +15,8 @@ import static guru.nidi.graphviz.model.Factory.*;
 
 public class Main {
   private static Graph graph;
+  
+  static Random RANDOM = new Random();
 
   public static void main(String[] args) {
     if (args.length == 0) {
@@ -37,7 +39,7 @@ public class Main {
       }
       graph = Graph.buildGraph(words);
 
-      Scanner scanner = new Scanner(System.in);
+      Scanner scanner = new Scanner(System.in, "UTF8");
       while (true) {
         System.out.println("\nMenu Options:");
         System.out.println("1. Show Directed Graph");
@@ -87,7 +89,7 @@ public class Main {
               String walk = randomWalk();
               System.out.println("Random walk path: " + walk);
               try {
-                Files.write(Paths.get("random_walk.txt"), walk.getBytes());
+                Files.write(Paths.get("random_walk.txt"), walk.getBytes("UTF8"));
                 System.out.println("Random walk saved to random_walk.txt");
               } catch (IOException e) {
                 System.err.println("Failed to save random walk: " + e.getMessage());
@@ -209,7 +211,7 @@ public class Main {
       if (i < words.size() - 1) {
         List<String> bridges = graph.findBridgeWords(words.get(i), words.get(i + 1));
         if (bridges != null && !bridges.isEmpty()) {
-          result.add(bridges.get(new Random().nextInt(bridges.size())));
+          result.add(bridges.get(RANDOM.nextInt(bridges.size())));
         }
       }
     }
