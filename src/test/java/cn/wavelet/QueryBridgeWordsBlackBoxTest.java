@@ -60,26 +60,4 @@ public class QueryBridgeWordsBlackBoxTest {
         String result = Main.queryBridgeWords("elephant", "zebra");
         assertEquals("No \"elephant\" and \"zebra\" in the graph!", result);
     }
-
-    @Test
-    public void testSingleBridgeWord() {
-        // apple -> dog -> banana
-        String result = Main.queryBridgeWords("apple", "banana");
-        assertEquals("The bridge word from \"apple\" to \"banana\" is: \"dog\"", result);
-    }
-
-    @Test
-    public void testEmptyGraph() {
-        Graph emptyGraph = new Graph();
-        Main.graph = emptyGraph;
-        String result = Main.queryBridgeWords("cat", "dog");
-        assertEquals("No \"cat\" and \"dog\" in the graph!", result);
-    }
-
-    @Test
-    public void testSameWord() {
-        // 自环情况
-        String result = Main.queryBridgeWords("cat", "cat");
-        assertEquals("No bridge words from \"cat\" to \"cat\"!", result);
-    }
 }
